@@ -1,0 +1,72 @@
+"use client";
+import React from 'react';
+import { useReducer } from 'react';
+
+import {UserPreferencesContext, PresetNames} from "./user_preferences_context";
+
+/** Handles global user state. User preferences get automatically synced to localStorage on every change. */
+export default function GlobalStateProvider({
+    children,
+  }: Readonly<{
+    children: React.ReactNode;
+  }>) {
+    // initial rendering is server side, localStorage is not available there. rely on default value of UserPreferencesContext instead.
+    // all further client side re-renderings can access the client's local storage for initial values
+    const isServerSideRender = typeof window === "undefined";
+    if(isServerSideRender) return <>{children}</>;
+
+    function updateUsername(currentUsername: string, updatedUsername: string){
+        localStorage.setItem("name", updatedUsername);
+        return updatedUsername;
+    }
+    const [username, setUsername] = useReducer(updateUsername, localStorage.getItem("name") || PresetNames[Math.floor(Math.random() * PresetNames.length)]);
+
+    function updateAutoscrolling(currentAutoscrolling: boolean, updatedAutoscrolling: boolean){
+        localStorage.setItem("autoscrolling", updatedAutoscrolling + "");
+        return updatedAutoscrolling;
+    }
+    const [autoscrolling, setAutoscrolling] = useReducer(updateAutoscrolling, localStorage?.getItem("autoscrolling") === "true" || false);
+
+    function updateAutoscrollSpeed(currentAutoscrollSpeed: number, updatedAutoscrollSpeed: number){
+        localStorage.setItem("autoscrollspeed", updatedAutoscrollSpeed + "");
+        return updatedAutoscrollSpeed;
+    }
+    const [autoscrollSpeed, setAutoscrollSpeed] = useReducer(updateAutoscrollSpeed, parseFloat(localStorage?.getItem("autoscrollspeed") || "1.0"));
+
+    function updateFontSizeModifier(currentFontSizeModifier: number, updatedFontSizeModifier: number){
+        localStorage.setItem("fontsizemodifier", updatedFontSizeModifier + "");
+        return updatedFontSizeModifier;
+    }
+    const [fontSizeModifier, setFontSizeModifier] = useReducer(updateFontSizeModifier, parseInt(localStorage?.getItem("fontsizemodifier") || "0"));
+
+    function updateAllowLead(currentAllowLead: boolean, updatedAllowLead: boolean){
+        localStorage.setItem("allowLead", updatedAllowLead + "");
+        return updatedAllowLead;
+    }
+    const [allowLead, setAllowLead] = useReducer(updateAllowLead, localStorage?.getItem("allowLead") === "true" || false);
+
+    function updateFollowTransposition(currentFollowTransposition: boolean, updatedFollowTransposition: boolean){
+        localStorage.setItem("followTransposition", updatedFollowTransposition + "");
+        return updatedFollowTransposition;
+    }
+    const [followTransposition, setFollowTransposition] = useReducer(updateFollowTransposition, localStorage?.getItem("followTransposition") === "true" || false);
+
+  return <>
+    <UserPreferencesContext.Provider value={{
+        username: username,
+        setUsername: setUsername,
+        autoscrolling: autoscrolling,
+        setAutoscrolling: setAutoscrolling,
+        autoscrollSpeed: autoscrollSpeed,
+        setAutoscrollSpeed: setAutoscrollSpeed,
+        fontSizeModifier: fontSizeModifier,
+        setFontSizeModifier: setFontSizeModifier,
+        allowLead: allowLead,
+        setAllowLead: setAllowLead,
+        followTransposition: followTransposition,
+        setFollowTransposition: setFollowTransposition,
+    }}>
+        {children}
+    </UserPreferencesContext.Provider>
+  </>;
+}

@@ -1,0 +1,107 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  font-family: sans-serif;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+div {
+  margin: 0px;
+  display: inline-block;
+}
+#root {
+  overflow-y: clip;
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+}
+.focusable {
+  border: 2px inset grey;
+  padding: 1em;
+  flex-shrink: 1;
+  flex-grow: 1;
+  width: 100vw;
+  height: 100vh;
+}
+.listing {
+  overflow-y: scroll;
+}
+.chords-box {
+  display: flex;
+  flex-flow: column;
+  min-height: 0px;
+}
+.chordsheet {
+  white-space: pre-wrap;
+  font-family: monospace;
+  overflow-y: scroll;
+  min-height: 0px;
+  flex-shrink: 1;
+}
+.chordsheet > div {
+  overflow-wrap: break-word;
+  max-width: 100%;
+}
+
+.square {
+  width: 2em;
+  height: 2em;
+  margin: 0;
+}
+
+.chord {
+  color: blue;
+}
+ul {
+  padding-left: 1em;
+}
+
+.controls {
+  display: flex;
+  width: 100%;
+}
+.controlgroup {
+  flex-grow: 1;
+}
+
+.chordlink {
+  color: blue;
+  text-decoration: underline;
+}
+.person * {
+  margin-right: 1em;
+}
+.float {
+  background-color: white;
+  position: fixed;
+}
+
+.top-right {
+  top: 1em;
+  right: 1em;
+}
+
+.block {
+  display: block;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+      color-scheme: dark;
+  }
+  .float {
+      background-color: inherit;
+  }
+  .chord {
+      color: cyan;
+  }
+  .chordlink {
+      color: cyan;
+  }
+}
