@@ -1,8 +1,9 @@
 "use client"; // This is a client component
 import React from 'react';
 import Link from 'next/link'
-import { useContext } from 'react';
+import { useContext, useEffect, useState, useCallback } from 'react';
 import { UserPreferencesContext } from '../user_preferences_context';
+import useChordsWebSocket, { WebSocketContext } from '../websocket_context';
 
 // TODO: same as state?
 export interface Person {
@@ -41,7 +42,12 @@ export default function PeopleView(
     // }
     ) {
         const userPreferences = useContext(UserPreferencesContext);
+        const webSocket = useContext(WebSocketContext);
 
+        let i=0;
+        const handleClickSendMessage = useCallback(() => webSocket.sendMessage('Hello' + i++), []);
+
+    
         // const peopleView = Object.keys(people).map((uuid) => {
             // const person = people[uuid]
             // const followee = people[person.following];
@@ -83,6 +89,17 @@ export default function PeopleView(
                     onChange={(e) => userPreferences.setUsername(e.target.value)} />
             {/* <ul>
                 {peopleView}
+            </ul> */}
+            <br />
+            <button onClick={handleClickSendMessage}>
+                Click Me to send &apos;Hello&apos;
+            </button>
+            <span>The WebSocket is currently {webSocket.readyState.toString()}</span>
+            {webSocket.lastMessageText ? <span>Last message: {webSocket.lastMessageText}</span> : null}
+            {/* <ul>
+                {messageHistory.map((message, idx) => (
+                    <li key={idx}>{message ? message : null}</li>
+                ))}
             </ul> */}
         </div>);
 }

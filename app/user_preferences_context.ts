@@ -1,4 +1,4 @@
-import { SetStateAction, createContext } from 'react';
+import { createContext } from 'react';
 
 export interface UserPreferences {
     username: string,
@@ -38,7 +38,7 @@ export const PresetNames = [
 
 // default values here are only needed for initial server-side rendering
 export const UserPreferencesContext = createContext<UserPreferences>({
-    username: PresetNames[Math.floor(Math.random() * PresetNames.length)],
+    username: "unknown",
     autoscrolling: false,
     autoscrollSpeed: 1.0,
     fontSizeModifier: 0,

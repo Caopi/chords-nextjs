@@ -2,7 +2,8 @@
 import React from 'react';
 import { useReducer } from 'react';
 
-import {UserPreferencesContext, PresetNames} from "./user_preferences_context";
+import { UserPreferencesContext, PresetNames } from "./user_preferences_context";
+import useChordsWebSocket, { WebSocketContext } from "./websocket_context";
 
 /** Handles global user state. User preferences get automatically synced to localStorage on every change. */
 export default function GlobalStateProvider({
@@ -10,11 +11,10 @@ export default function GlobalStateProvider({
   }: Readonly<{
     children: React.ReactNode;
   }>) {
-    // initial rendering is server side, localStorage is not available there. rely on default value of UserPreferencesContext instead.
-    // all further client side re-renderings can access the client's local storage for initial values
-    const isServerSideRender = typeof window === "undefined";
-    if(isServerSideRender) return <>{children}</>;
+    /* WebSocket */
+    const webSocketContext = useChordsWebSocket()
 
+    /* User preferences */
     function updateUsername(currentUsername: string, updatedUsername: string){
         localStorage.setItem("name", updatedUsername);
         return updatedUsername;
@@ -66,7 +66,9 @@ export default function GlobalStateProvider({
         followTransposition: followTransposition,
         setFollowTransposition: setFollowTransposition,
     }}>
-        {children}
+        <WebSocketContext.Provider value={webSocketContext}>
+            {children}
+        </WebSocketContext.Provider>
     </UserPreferencesContext.Provider>
   </>;
 }

@@ -1,8 +1,13 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import GlobalStateProvider from "./global_state_provider";
-import Link from 'next/link'
+import Link from 'next/link';
+import dynamic from 'next/dynamic';
+
+const GlobalStateProviderWithNoSSR = dynamic(
+  () => import('./global_state_provider'),
+  { ssr: false }
+)
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,7 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <GlobalStateProvider>
+        <GlobalStateProviderWithNoSSR>
             <div className="float top-right" >
                 {/* {readyState === useWebSocket.ReadyState.OPEN ? "" : <>Disconnected 🔌<br/></>}
                 { following ?
@@ -34,7 +39,7 @@ export default function RootLayout({
             </div>
 
           {children}
-        </GlobalStateProvider>
+        </GlobalStateProviderWithNoSSR>
       </body>
     </html>
   );

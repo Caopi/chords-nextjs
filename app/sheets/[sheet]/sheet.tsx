@@ -118,7 +118,7 @@ return <div className="chords-box focusable">
         </div>
         <div className="controlgroup">
             <button className="square autoscroll-slower" onClick={() => adjustAutoscrollSpeed(-1)}>🐢</button>
-            <button className="square autoscroll" onClick={toggleAutoscroll} suppressHydrationWarning>{userPreferences.autoscrolling ? "⏸" : "⏵"}</button>
+            <button className="square autoscroll" onClick={toggleAutoscroll}>{userPreferences.autoscrolling ? "⏸" : "⏵"}</button>
             <button className="square autoscroll-faster" onClick={() => adjustAutoscrollSpeed(1)}>🐇</button>
         </div>
     </div>
