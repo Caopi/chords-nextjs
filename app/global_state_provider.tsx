@@ -4,6 +4,7 @@ import { useReducer } from 'react';
 
 import { UserPreferencesContext, PresetNames } from "./user_preferences_context";
 import useChordsWebSocket, { WebSocketContext } from "./websocket_context";
+import uuid4 from "uuid4";
 
 /** Handles global user state. User preferences get automatically synced to localStorage on every change. */
 export default function GlobalStateProvider({
@@ -11,8 +12,6 @@ export default function GlobalStateProvider({
   }: Readonly<{
     children: React.ReactNode;
   }>) {
-    /* WebSocket */
-    const webSocketContext = useChordsWebSocket()
 
     /* User preferences */
     function updateUsername(currentUsername: string, updatedUsername: string){
@@ -51,10 +50,20 @@ export default function GlobalStateProvider({
     }
     const [followTransposition, setFollowTransposition] = useReducer(updateFollowTransposition, localStorage?.getItem("followTransposition") === "true" || false);
 
+    function updateOwnUuid(currentOwnUuid: string, updatedOwnUuid: string){
+        localStorage.setItem("uuid", updatedOwnUuid);
+        return updatedOwnUuid;
+    }
+    const [ownUuid, setOwnUuid] = useReducer(updateOwnUuid, localStorage?.getItem("uuid") || uuid4());
+
+    /* WebSocket */
+    const webSocketContext = useChordsWebSocket();
+
   return <>
     <UserPreferencesContext.Provider value={{
         username: username,
         setUsername: setUsername,
+        uuid: ownUuid,
         autoscrolling: autoscrolling,
         setAutoscrolling: setAutoscrolling,
         autoscrollSpeed: autoscrollSpeed,

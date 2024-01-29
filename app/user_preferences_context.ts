@@ -1,6 +1,7 @@
 import { createContext } from 'react';
 
 export interface UserPreferences {
+    uuid: string,
     username: string,
     setUsername: React.Dispatch<string>,
     autoscrolling: boolean,
@@ -39,6 +40,7 @@ export const PresetNames = [
 // default values here are only needed for initial server-side rendering
 export const UserPreferencesContext = createContext<UserPreferences>({
     username: "unknown",
+    uuid: "unknown",
     autoscrolling: false,
     autoscrollSpeed: 1.0,
     fontSizeModifier: 0,

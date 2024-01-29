@@ -3,25 +3,7 @@ import React from 'react';
 import Link from 'next/link'
 import { useContext, useEffect, useState, useCallback } from 'react';
 import { UserPreferencesContext } from '../user_preferences_context';
-import useChordsWebSocket, { WebSocketContext } from '../websocket_context';
-
-// TODO: same as state?
-export interface Person {
-    focus: string,
-    currentSheet: string,
-    autoscrollSpeed: number,
-    autoscrolling: boolean,
-    transposition: number,
-    name: string,
-    uuid: string,
-    following: string,
-    scrollPos: number,
-    allowLead: boolean,
-}
-
-export type PersonList = {
-    [key: string]: Person
-}
+import useChordsWebSocket, { WebSocketContext, NetworkMessage } from '../websocket_context';
 
 export default function PeopleView(
     // {
@@ -48,6 +30,28 @@ export default function PeopleView(
         const handleClickSendMessage = useCallback(() => webSocket.sendMessage('Hello' + i++), []);
 
     
+        /* 
+        * pro user:
+        * name + uuid, aktueller "ort" (lied oder nichts), allowLead flag, ob und wem following
+        * effekt:
+        * - sofort navigieren zu dem was der leader gerade macht
+        * - wenn leader navigiert (liste / lied) navigiert user mit
+        * - wenn leader autoscroll anmacht wird es beim follower auch angemacht
+        * - autoscroll speed wird gesynct
+        * - problem: speed bleibt auch nach unfollowing
+        * - problem bei autoscroll: unterschiedliche schriftgrößen sind unterschiedlich schnell
+        * - problem bei autoscroll: unterschiedliche auflösungen können umbrüche verursachen und dadurch die vertikale platznutzung verzerren
+        * - schriftgröße nicht gesynct
+        * - transpose wird gesynct wenn das setting an ist (keine ahnung warums dafür ein setting gibt)
+        */
+
+        /* protokoll ideen:
+        1. discovery message -> ich bin hier, ich bin der, bei initial connection
+        2. wenn discovery empfangen -> jeder antwortet mit seinem current full state
+        3. wenn navigation -> partial update
+        4. wenn autoscroll -> partial update 
+
+        */
         // const peopleView = Object.keys(people).map((uuid) => {
             // const person = people[uuid]
             // const followee = people[person.following];
